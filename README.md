@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>postal-service</h1> 
+    <h1>drf-project</h1> 
     <p>
         Django-проект c подключенным DRF
     </p>
