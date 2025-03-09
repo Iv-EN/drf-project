@@ -1,3 +1,5 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
@@ -12,6 +14,7 @@ class CourseViewSet(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
 
 
 class BaseApiView:
@@ -19,6 +22,7 @@ class BaseApiView:
 
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
 
 
 class LessonCreateApiView(BaseApiView, CreateAPIView):
