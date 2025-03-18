@@ -50,13 +50,16 @@ class BaseApiView:
     serializer_class = LessonSerializer
 
     def get_queryset(self):
-        if not self.request.user.groups.filter(name=UsersConfig.moderator_group_name).exists():
+        if not self.request.user.groups.filter(
+            name=UsersConfig.moderator_group_name
+        ).exists():
             return Lesson.objects.filter(owner=self.request.user)
         return Lesson.objects.all()
 
 
 class LessonCreateApiView(BaseApiView, CreateAPIView):
     """Создание нового урока курса."""
+
     permission_classes = (IsNotModerator,)
 
     def perform_create(self, serializer):
@@ -69,14 +72,17 @@ class LessonListApiView(BaseApiView, ListAPIView):
 
 class LessonRetieveApiView(BaseApiView, RetrieveAPIView):
     """Получение информации о конкретном уроке курса."""
+
     permission_classes = (IsModerator | IsOwner,)
 
 
 class LessonUpdateApiView(BaseApiView, UpdateAPIView):
     """Обновление информации о конкретном уроке курса."""
+
     permission_classes = (IsModerator | IsOwner,)
 
 
 class LessonDestroyApiView(BaseApiView, DestroyAPIView):
     """Удаление конкретного урока курса."""
+
     permission_classes = (IsNotModerator | IsOwner,)
