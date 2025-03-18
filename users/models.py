@@ -37,7 +37,10 @@ class Payments(models.Model):
         BANK_TRANSFER = "bank_transfer", "Банковский перевод"
 
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Пользователь", related_name="payments"
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        related_name="payments",
     )
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Сумма оплаты"

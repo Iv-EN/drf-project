@@ -11,6 +11,14 @@ class Course(models.Model):
     picture = models.ImageField(
         upload_to="course/", verbose_name="Изображение", null=True, blank=True
     )
+    owner = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца курса",
+    )
 
     def __str__(self):
         return self.name
@@ -40,6 +48,14 @@ class Lesson(models.Model):
         related_name="lessons",
         null=True,
         blank=True,
+    )
+    owner = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца урока",
     )
 
     def __str__(self):
