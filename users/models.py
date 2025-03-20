@@ -71,3 +71,24 @@ class Payments(models.Model):
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
+
+
+class SubscriptionToCourse(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Пользователь"
+    )
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, verbose_name="Курс"
+    )
+    start_date = models.DateField(
+        auto_now_add=True, verbose_name="Дата начала подписки"
+    )
+
+    def __str__(self):
+        return f"{self.user} - {self.course}"
+
+    class Meta:
+        verbose_name = "Подписка на курс"
+        verbose_name_plural = "Подписки на курсы"
+        unique_together = ("user", "course")
+        ordering = ["-start_date", "user", "course"]
