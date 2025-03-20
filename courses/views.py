@@ -5,8 +5,9 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      UpdateAPIView)
 from rest_framework.viewsets import ModelViewSet
 
-from courses.models import Course, Lesson
-from courses.serialiser import CourseSerializer, LessonSerializer
+from .models import Course, Lesson
+from .paginators import CoursesPaginator, LessonsPaginator
+from .serialiser import CourseSerializer, LessonSerializer
 from users.apps import UsersConfig
 from users.permissions import IsModerator, IsNotModerator, IsOwner
 
@@ -17,6 +18,7 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
+    pagination_class = CoursesPaginator
 
     def get_queryset(self):
         if (
@@ -68,6 +70,7 @@ class LessonCreateApiView(BaseApiView, CreateAPIView):
 
 class LessonListApiView(BaseApiView, ListAPIView):
     """Получение списка уроков курса."""
+    pagination_class = LessonsPaginator
 
 
 class LessonRetieveApiView(BaseApiView, RetrieveAPIView):

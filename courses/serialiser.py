@@ -49,9 +49,11 @@ class CourseSerializer(ModelSerializer):
 
     def get_subscription(self, instance):
         user = self.context["request"].user
-        subscription = SubscriptionToCourse.objects.all().filter(
-            user=user, course=instance
-        ).exists()
+        subscription = (
+            SubscriptionToCourse.objects.all()
+            .filter(user=user, course=instance)
+            .exists()
+        )
         if subscription:
             return "Вы подписаны на этот курс"
         return "У Вас нет подписки на этот курс"
