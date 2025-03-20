@@ -1,14 +1,19 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from users.models import Payments, User
-from users.serialiser import (MyTokenObtainPairSerializer, PaymentSerializer,
-                              UserDetailSerializer, UserSerializer)
+from courses.models import Course
+
+from .models import Payments, SubscriptionToCourse, User
+from .serialiser import (MyTokenObtainPairSerializer, PaymentSerializer,
+                         SubscriptionToCourseSerializer, UserDetailSerializer,
+                         UserSerializer)
 
 
 class UserViewSet(ModelViewSet):
@@ -85,6 +90,28 @@ class PaymentViewSet(ModelViewSet):
         """Ограничивает доступ к платежам только текущего пользователя."""
         user = self.request.user
         return Payments.objects.filter(user=user.id)
+
+
+class SubscriptionToCourseView(APIView):
+    """ViewSet для подписки/отписки на курс."""
+
+    queryset = SubscriptionToCourse.objects.all()
+    serializer_class = SubscriptionToCourseSerializer
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        course_id = self.request.data.get("course")
+        course_item = get_object_or_404(Course, pk=course_id)
+        subs_item = SubscriptionToCourse.objects.all().filter(
+            user=user, course=course_item
+        )
+        if subs_item.exists():
+            subs_item.delete()
+            message = f"Вы отписались от курса '{course_item.name}'."
+        else:
+            SubscriptionToCourse.objects.create(user=user, course=course_item)
+            message = f"Вы подписались на курс '{course_item.name}'."
+        return Response(message, status=status.HTTP_200_OK)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

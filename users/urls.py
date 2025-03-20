@@ -3,8 +3,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from users.apps import UsersConfig
-from users.views import MyTokenObtainPairView, PaymentViewSet, UserViewSet
+from .apps import UsersConfig
+from .views import (MyTokenObtainPairView, PaymentViewSet,
+                    SubscriptionToCourseView, UserViewSet)
 
 app_name = UsersConfig.name
 
@@ -23,6 +24,11 @@ urlpatterns = [
         "token/refresh/",
         TokenRefreshView.as_view(permission_classes=(AllowAny,)),
         name="token_refresh",
+    ),
+    path(
+        "subscription/",
+        SubscriptionToCourseView.as_view(),
+        name="subscription",
     ),
     path("", include(router.urls)),
 ]

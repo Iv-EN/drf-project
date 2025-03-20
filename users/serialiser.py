@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.models import Payments, User
+from .models import Payments, SubscriptionToCourse, User
 
 
 class PaymentSerializer(ModelSerializer):
@@ -56,3 +56,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["username"] = user.username
         token["email"] = user.email
         return token
+
+
+class SubscriptionToCourseSerializer(ModelSerializer):
+    class Meta:
+        model = SubscriptionToCourse
+        fields = "__all__"
