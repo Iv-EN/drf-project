@@ -1,10 +1,6 @@
 from rest_framework.fields import DateTimeField, DecimalField
-from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 
-from courses.models import Course, Lesson
 from courses.tests import BaseTestCase
-
 from .models import Payments, SubscriptionToCourse, User
 
 
