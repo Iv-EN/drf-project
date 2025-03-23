@@ -5,11 +5,12 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      UpdateAPIView)
 from rest_framework.viewsets import ModelViewSet
 
+from users.apps import UsersConfig
+from users.permissions import IsModerator, IsNotModerator, IsOwner
+
 from .models import Course, Lesson
 from .paginators import CoursesPaginator, LessonsPaginator
 from .serialiser import CourseSerializer, LessonSerializer
-from users.apps import UsersConfig
-from users.permissions import IsModerator, IsNotModerator, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
@@ -70,6 +71,7 @@ class LessonCreateApiView(BaseApiView, CreateAPIView):
 
 class LessonListApiView(BaseApiView, ListAPIView):
     """Получение списка уроков курса."""
+
     pagination_class = LessonsPaginator
 
 
