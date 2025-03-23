@@ -114,9 +114,11 @@ class TestCourse(BaseTestCase):
 
 
 class TestLesson(BaseTestCase):
+    """Тестирование модели урока."""
+
     def test_create_lesson(self):
         """Проверка создания нового урока."""
-        url = reverse('courses:lesson_create')
+        url = reverse("courses:lesson_create")
         data = {
             "name": "test_lesson_2",
             "description": "test lesson description 2",
@@ -131,7 +133,7 @@ class TestLesson(BaseTestCase):
 
     def test_update_lesson(self):
         """Проверка изменения урока."""
-        url = reverse('courses:lesson_update', args=(self.lesson.pk,))
+        url = reverse("courses:lesson_update", args=(self.lesson.pk,))
         data = {"name": "updated_lesson_name"}
         response = self.client.put(url, data=data)
         self.assertEqual(response.status_code, 200)
@@ -147,7 +149,7 @@ class TestLesson(BaseTestCase):
     def test_list_lesson(self):
         """Проверка получения списка уроков."""
         self.maxDiff = None
-        url = reverse('courses:lesson_list')
+        url = reverse("courses:lesson_list")
         response = self.client.get(url)
         data = response.json()
         result = {
@@ -160,8 +162,8 @@ class TestLesson(BaseTestCase):
                     "name": "test_lesson",
                     "description": "test description",
                     "picture": None,
-                    'video_url': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                    'course': self.course.pk,
+                    "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "course": self.course.pk,
                     "owner": self.user.pk,
                 }
             ],
@@ -173,7 +175,7 @@ class TestLesson(BaseTestCase):
 
     def test_retrieve_lesson(self):
         """Проверка получения урока по id."""
-        url = reverse('courses:lesson_retrieve', args=(self.lesson.pk,))
+        url = reverse("courses:lesson_retrieve", args=(self.lesson.pk,))
         response = self.client.get(url)
         data = response.json()
         self.assertEqual(response.status_code, 200)
@@ -182,7 +184,7 @@ class TestLesson(BaseTestCase):
 
     def test_delete_lesson(self):
         """Проверка удаления урока."""
-        url = reverse('courses:lesson_destroy', args=(self.lesson.pk,))
+        url = reverse("courses:lesson_destroy", args=(self.lesson.pk,))
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Lesson.objects.count(), 0)
