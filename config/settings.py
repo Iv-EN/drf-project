@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_filters",
+    "drf_yasg",
     "rest_framework_simplejwt",
     "users.apps.UsersConfig",
     "courses.apps.CoursesConfig",
@@ -123,3 +124,5 @@ PAGINATOR_LESSON_MAX_PAGE_SIZE = 10
 
 PAGINATOR_COURSE_PAGE_SIZE = 5
 PAGINATOR_COURSE_MAX_PAGE_SIZE = 10
+
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")

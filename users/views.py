@@ -1,5 +1,7 @@
+import stripe
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -14,6 +16,7 @@ from .models import Payments, SubscriptionToCourse, User
 from .serialiser import (MyTokenObtainPairSerializer, PaymentSerializer,
                          SubscriptionToCourseSerializer, UserDetailSerializer,
                          UserSerializer)
+from .services import create_stripe_price, create_stripe_session
 
 
 class UserViewSet(ModelViewSet):
@@ -90,6 +93,34 @@ class PaymentViewSet(ModelViewSet):
         """Ограничивает доступ к платежам только текущего пользователя."""
         user = self.request.user
         return Payments.objects.filter(user=user.id)
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        price = create_stripe_price(payment.amount)
+        session_id, payment_link = create_stripe_session(price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
+
+    @action(detail=True, methods=["get"])
+    def check_payment_status(self, request, pk=None):
+        """Проверяет статус платежа по session_id."""
+        try:
+            payment = self.get_object()
+            session_id = payment.session_id
+            session = stripe.checkout.Session.retrieve(session_id)
+            if session.payment_status == "paid":
+                payment.status = "Оплачен"
+            else:
+                payment.status = "Не оплачен"
+            payment.save()
+            return Response(
+                "Платеж успешно оплачен.", status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class SubscriptionToCourseView(APIView):

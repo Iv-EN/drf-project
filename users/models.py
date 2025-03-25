@@ -3,19 +3,21 @@ from django.db import models
 
 from courses.models import Course, Lesson
 
+blank_null_true = {"blank": True, "null": True}
+
 
 class User(AbstractUser):
     """Описывает пользователя."""
 
     email = models.EmailField(unique=True, verbose_name="Электронная почта")
     phone_number = models.CharField(
-        max_length=15, blank=True, null=True, verbose_name="Номер телефона"
+        max_length=15, **blank_null_true, verbose_name="Номер телефона"
     )
     avatar = models.ImageField(
-        upload_to="users/avatars", blank=True, null=True, verbose_name="Фото"
+        upload_to="users/avatars", **blank_null_true, verbose_name="Фото"
     )
     city = models.CharField(
-        max_length=25, blank=True, null=True, verbose_name="Город"
+        max_length=25, **blank_null_true, verbose_name="Город"
     )
 
     USERNAME_FIELD = "email"
@@ -52,28 +54,45 @@ class Payments(models.Model):
         Lesson,
         on_delete=models.CASCADE,
         verbose_name="Оплаченный урок",
-        null=True,
-        blank=True,
+        **blank_null_true,
     )
     paid_course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
         verbose_name="Оплаченный курс",
-        null=True,
-        blank=True,
+        **blank_null_true,
     )
     payment_method = models.CharField(
         max_length=20,
         choices=Way.choices,
         verbose_name="Способ оплаты",
     )
+    session_id = models.CharField(
+        max_length=255,
+        **blank_null_true,
+        verbose_name="ID сессии",
+    )
+    link = models.URLField(
+        max_length=400,
+        **blank_null_true,
+        verbose_name="Ссылка на оплату",
+    )
+    status = models.CharField(
+        max_length=20, **blank_null_true, verbose_name="Статус оплаты"
+    )
 
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user} - {self.paid_course if self.paid_course else self.paid_lesson}"
 
 
 class SubscriptionToCourse(models.Model):
+    """Описывает подписки пользователей на курсы."""
+
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
