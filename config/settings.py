@@ -21,10 +21,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
+    "django_celery_beat",
     "django_filters",
-    "drf_yasg",
+    "rest_framework",
     "rest_framework_simplejwt",
+    "drf_yasg",
     "users.apps.UsersConfig",
     "courses.apps.CoursesConfig",
 ]
@@ -126,3 +127,26 @@ PAGINATOR_COURSE_PAGE_SIZE = 5
 PAGINATOR_COURSE_MAX_PAGE_SIZE = 10
 
 STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    "add": {
+        "task": "courses.tasks.add",  # Путь к задаче
+        "schedule": timedelta(
+            minutes=10
+        ),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
+}
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")

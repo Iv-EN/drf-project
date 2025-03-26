@@ -5,8 +5,10 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      UpdateAPIView)
 from rest_framework.viewsets import ModelViewSet
 
+from courses.tasks import send_update_course
 from users.apps import UsersConfig
 from users.permissions import IsModerator, IsNotModerator, IsOwner
+from users.services import get_data_for_sending_messages
 
 from .models import Course, Lesson
 from .paginators import CoursesPaginator, LessonsPaginator
@@ -35,6 +37,7 @@ class CourseViewSet(ModelViewSet):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
+        add.delay()
 
     def get_permissions(self):
         if self.action == "create":
@@ -67,6 +70,14 @@ class LessonCreateApiView(BaseApiView, CreateAPIView):
 
     def perform_create(self, serializer):
         lesson = serializer.save(owner=self.request.user)
+        subscribers_mail, message, subject = get_data_for_sending_messages(
+            lesson
+        )
+        send_update_course.delay(
+            subscribers_mail=subscribers_mail,
+            message=message,
+            subject=subject,
+        )
 
 
 class LessonListApiView(BaseApiView, ListAPIView):
