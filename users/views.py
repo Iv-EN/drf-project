@@ -16,7 +16,8 @@ from .models import Payments, SubscriptionToCourse, User
 from .serialiser import (MyTokenObtainPairSerializer, PaymentSerializer,
                          SubscriptionToCourseSerializer, UserDetailSerializer,
                          UserSerializer)
-from .services import create_stripe_price, create_stripe_session
+from .services import create_stripe_price, create_stripe_product, \
+    create_stripe_session
 
 
 class UserViewSet(ModelViewSet):
@@ -96,7 +97,8 @@ class PaymentViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         payment = serializer.save(user=self.request.user)
-        price = create_stripe_price(payment.amount)
+        product_id = create_stripe_product(payment)
+        price = create_stripe_price(product_id, payment.amount)
         session_id, payment_link = create_stripe_session(price)
         payment.session_id = session_id
         payment.link = payment_link
@@ -115,7 +117,7 @@ class PaymentViewSet(ModelViewSet):
                 payment.status = "Не оплачен"
             payment.save()
             return Response(
-                "Платеж успешно оплачен.", status=status.HTTP_200_OK
+                payment.status, status=status.HTTP_200_OK
             )
         except Exception as e:
             return Response(
