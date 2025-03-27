@@ -34,6 +34,7 @@ class CourseSerializer(ModelSerializer):
             "lessons_count",
             "lessons",
             "subscription",
+            "updated_at",
         )
 
     def get_lessons_count(self, instance):

@@ -13,11 +13,18 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from courses.models import Course
 
 from .models import Payments, SubscriptionToCourse, User
-from .serialiser import (MyTokenObtainPairSerializer, PaymentSerializer,
-                         SubscriptionToCourseSerializer, UserDetailSerializer,
-                         UserSerializer)
-from .services import create_stripe_price, create_stripe_product, \
-    create_stripe_session
+from .serialiser import (
+    MyTokenObtainPairSerializer,
+    PaymentSerializer,
+    SubscriptionToCourseSerializer,
+    UserDetailSerializer,
+    UserSerializer,
+)
+from .services import (
+    create_stripe_price,
+    create_stripe_product,
+    create_stripe_session,
+)
 
 
 class UserViewSet(ModelViewSet):
@@ -116,9 +123,7 @@ class PaymentViewSet(ModelViewSet):
             else:
                 payment.status = "Не оплачен"
             payment.save()
-            return Response(
-                payment.status, status=status.HTTP_200_OK
-            )
+            return Response(payment.status, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
                 str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR

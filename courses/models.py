@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 blank_null_true = {"blank": True, "null": True}
 
@@ -20,6 +21,7 @@ class Course(models.Model):
         verbose_name="Владелец",
         help_text="Укажите владельца курса",
     )
+    updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -56,6 +58,7 @@ class Lesson(models.Model):
         verbose_name="Владелец",
         help_text="Укажите владельца урока",
     )
+    updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
