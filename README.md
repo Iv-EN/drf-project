@@ -20,11 +20,16 @@ SPA-приложение на Django.
             <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original-wordmark.svg" title="Python" alt="Python" width="40" height="40"/>&nbsp;
             <img src="https://github.com/devicons/devicon/blob/master/icons/django/django-plain-wordmark.svg" title="Django" alt="Django" width="40" height="40"/>&nbsp;
             <img src="https://github.com/devicons/devicon/blob/master/icons/djangorest/djangorest-original-wordmark.svg" title="DRF" alt="DRF" width="40" height="40"/>&nbsp;
+            <img src="https://github.com/devicons/devicon/blob/master/icons/redis/redis-original-wordmark.svg" title="Redis" alt="DRF" width="40" height="40"/>
+            <img src="https://badgen.net/badge/C/Celery/green?" title="Celery" alt="DRF" width="40" height="40"/>
         </div>
     </h3>
 </div>
 
 ---
+
+## Требования
+брокер `Redis`
 
 ## Локальная установка проекта
 
@@ -50,9 +55,29 @@ pip install -r requirements.txt
 
 ## Запуск проекта
 
-2. Для запуска проекта из корня проекта выполните команду:
+Для запуска проекта:
+1. Запустите обработчик очереди
+Windows
+```bash
+celery -A config worker -l INFO -P eventlet
+```
+Linux
+```bash
+celery -A config worker -l INFO
+```
+2. Запустите планировщик Celery beat
+```bash
+celery -A config beat -l INFO  
+```
+3. Запустите проект
 ```bash
 python3 manage.py runserver
+```
+
+Документация:
+```
+http://127.0.0.1:8000/redoc/
+http://127.0.0.1:8000/swagger/
 ```
 ___
 
