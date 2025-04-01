@@ -7,3 +7,6 @@ class UsersConfig(AppConfig):
     verbose_name = "Пользователи"
 
     moderator_group_name = "Модераторы"
+
+    def ready(self):
+        import users.signals

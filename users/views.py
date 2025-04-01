@@ -13,18 +13,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from courses.models import Course
 
 from .models import Payments, SubscriptionToCourse, User
-from .serialiser import (
-    MyTokenObtainPairSerializer,
-    PaymentSerializer,
-    SubscriptionToCourseSerializer,
-    UserDetailSerializer,
-    UserSerializer,
-)
-from .services import (
-    create_stripe_price,
-    create_stripe_product,
-    create_stripe_session,
-)
+from .serialiser import (MyTokenObtainPairSerializer, PaymentSerializer,
+                         SubscriptionToCourseSerializer, UserDetailSerializer,
+                         UserSerializer)
+from .services import (create_stripe_price, create_stripe_product,
+                       create_stripe_session)
 
 
 class UserViewSet(ModelViewSet):

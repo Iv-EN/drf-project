@@ -3,17 +3,14 @@ from datetime import timedelta
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-)
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     ListAPIView, RetrieveAPIView,
+                                     UpdateAPIView)
 from rest_framework.viewsets import ModelViewSet
 
 from users.apps import UsersConfig
 from users.permissions import IsModerator, IsNotModerator, IsOwner
+
 from .models import Course, Lesson
 from .paginators import CoursesPaginator, LessonsPaginator
 from .serialiser import CourseSerializer, LessonSerializer
