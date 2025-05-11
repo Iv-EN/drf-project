@@ -29,56 +29,73 @@ SPA-приложение на Django.
 ---
 
 ## Требования
+
 брокер `Redis`
 
 ## Локальная установка проекта
 
 1. Клонируйте репозиторий:
+
 ```bash
 git clone https://github.com/Iv-EN/drf-project.git
 ```
-2.  Создайте и активируйте виртуальное пространство:
+
+2. Создайте и активируйте виртуальное пространство:
+
 ```bash
 python3 -m venv venv
 ```
+
 ```bash
 sourse venv/bin/activate
 ```
+
 3. Обновите pip и установите зависимости:
+
 ```bash
 python3 -m pip install --upgrade pip
 ```
+
 ```bash
 pip install -r requirements.txt
 ```
 
-
 ## Запуск проекта
 
 Для запуска проекта:
+
 1. Запустите обработчик очереди
-Windows
+   Windows
+
 ```bash
 celery -A config worker -l INFO -P eventlet
 ```
+
 Linux
+
 ```bash
 celery -A config worker -l INFO
 ```
+
 2. Запустите планировщик Celery beat
+
 ```bash
 celery -A config beat -l INFO  
 ```
+
 3. Запустите проект
+
 ```bash
 python3 manage.py runserver
 ```
 
 Документация:
+
 ```
 http://127.0.0.1:8000/redoc/
 http://127.0.0.1:8000/swagger/
 ```
+
 ___
 
 <h3 align="center">

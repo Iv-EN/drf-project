@@ -18,3 +18,6 @@ class PaymentsAdmin(admin.ModelAdmin):
 class SubscriptionToCourseAdmin(admin.ModelAdmin):
     list_display = ("user", "course", "start_date")
     list_filter = ("user", "course")
+
+
+2
